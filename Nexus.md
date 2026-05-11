@@ -179,23 +179,6 @@ main
 | `-c, --cpus` | CPU limit for container | `2` |
 | `-h, --help` | Show help message | - |
 
-## Usage Examples
-
-### Basic setup (default values)
-```bash
-./setup-nexus.sh
-```
-
-### Custom port and container name
-```bash
-./setup-nexus.sh --name my-nexus --port 9090
-```
-
-### With resource limits
-```bash
-./setup-nexus.sh --memory 4g --cpus 4
-```
-
 ## Usage Steps
 
 1. **Save the script**
@@ -232,32 +215,3 @@ http://localhost:8081
 > - The data directory (`/opt/nexus-data`) contains sensitive information
 > - Ensure proper backup of the data directory
 > - For production, consider using secrets management instead of default passwords
-
-## Troubleshooting
-
-| Issue | Solution |
-|-------|----------|
-| Permission denied | Ensure `chown 200:200` ran successfully on data directory |
-| Port already in use | Use `-p` option to specify a different port |
-| Container not starting | Check logs: `docker logs nexus3` |
-| High memory usage | Adjust `--memory` and JVM parameters |
-| Slow startup | Nexus can take 2-3 minutes to fully initialize |
-
-## Maintenance Commands
-
-```bash
-# Stop container
-docker stop nexus3
-
-# Start container
-docker start nexus3
-
-# View logs
-docker logs -f nexus3
-
-# Access container shell
-docker exec -it nexus3 bash
-
-# Backup data
-tar -czf nexus-backup.tar.gz /opt/nexus-data
-```
