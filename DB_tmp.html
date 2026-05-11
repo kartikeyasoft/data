@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>DB.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<pre class="hljs"><code><div><span class="hljs-section"># MariaDB Container Setup Script</span>
+
+This Bash script automates the deployment of a MariaDB container with Docker, including installation, configuration, firewall setup, and remote access.
+
+<span class="hljs-section">## Prerequisites</span>
+
+<span class="hljs-bullet">-</span> Linux system (CentOS/RHEL based with <span class="hljs-code">`yum`</span> or Ubuntu/Debian with <span class="hljs-code">`ufw`</span>)
+<span class="hljs-bullet">-</span> Root or sudo access
+
+<span class="hljs-section">## Script Overview</span>
+
+The script performs the following steps:
+
+<span class="hljs-bullet">1.</span> Installs Docker (if not present)
+<span class="hljs-bullet">2.</span> Removes any existing <span class="hljs-code">`exam-db`</span> container
+<span class="hljs-bullet">3.</span> Starts a new MariaDB 10.11 container
+<span class="hljs-bullet">4.</span> Waits for the container to be ready
+<span class="hljs-bullet">5.</span> Verifies container status and logs
+<span class="hljs-bullet">6.</span> Retrieves container IP address
+<span class="hljs-bullet">7.</span> Tests local database connection
+<span class="hljs-bullet">8.</span> Configures firewall (firewalld or ufw)
+<span class="hljs-bullet">9.</span> Grants remote access privileges
+<span class="hljs-bullet">10.</span> Displays connection information
+
+<span class="hljs-section">## Full Script</span>
+
+<span class="hljs-code">```bash
+#!/bin/bash
+
+# ============================================
+# MariaDB Container Setup Script
+# ============================================
+
+set -e
+
+echo &quot;==========================================&quot;
+echo &quot;MariaDB Container Setup&quot;
+echo &quot;==========================================&quot;
+
+# Step 1: Install Docker
+echo &quot;&quot;
+echo &quot;Step 1: Installing Docker...&quot;
+if ! command -v docker &amp;&gt; /dev/null; then
+    sudo yum install docker -y
+    sudo systemctl start docker
+    sudo systemctl enable docker
+    echo &quot;✅ Docker installed successfully&quot;
+else
+    echo &quot;✅ Docker already installed&quot;
+fi
+
+# Step 2: Remove existing container if exists
+echo &quot;&quot;
+echo &quot;Step 2: Removing existing container if exists...&quot;
+if sudo docker ps -a --format &#x27;{{.Names}}&#x27; | grep -q &quot;^exam-db$&quot;; then
+    sudo docker stop exam-db 2&gt;/dev/null || true
+    sudo docker rm exam-db 2&gt;/dev/null || true
+    echo &quot;✅ Removed existing exam-db container&quot;
+fi
+
+# Step 3: Run MariaDB container
+echo &quot;&quot;
+echo &quot;Step 3: Starting MariaDB container...&quot;
+sudo docker run -d \
+    --name exam-db \
+    --restart always \
+    -p 0.0.0.0:3306:3306 \
+    -e MYSQL_ROOT_PASSWORD=Admin@123 \
+    -e MYSQL_DATABASE=exam \
+    -e MYSQL_USER=Admin \
+    -e MYSQL_PASSWORD=Admin@123 \
+    -e MYSQL_ROOT_HOST=&#x27;%&#x27; \
+    mariadb:10.11 \
+    --bind-address=0.0.0.0
+
+echo &quot;✅ MariaDB container started&quot;
+
+# Step 4: Wait for container to be ready
+echo &quot;&quot;
+echo &quot;Step 4: Waiting for container to be ready...&quot;
+sleep 10
+
+# Step 5: Check if running
+echo &quot;&quot;
+echo &quot;Step 5: Checking container status...&quot;
+sudo docker ps | grep exam-db
+
+# Step 6: Check container logs
+echo &quot;&quot;
+echo &quot;Step 6: Container logs (last 20 lines)...&quot;
+sudo docker logs exam-db --tail 20
+
+# Step 7: Get container IP
+echo &quot;&quot;
+echo &quot;Step 7: Container IP address...&quot;
+sudo docker inspect exam-db | grep IPAddress | head -1
+
+# Step 8: Test local connection
+echo &quot;&quot;
+echo &quot;Step 8: Testing local connection...&quot;
+if sudo docker exec exam-db mysql -uAdmin -pAdmin@123 -e &quot;SHOW DATABASES;&quot; 2&gt;/dev/null; then
+    echo &quot;✅ Local connection successful&quot;
+else
+    echo &quot;❌ Local connection failed&quot;
+    exit 1
+fi
+
+# Step 9: Configure firewall
+echo &quot;&quot;
+echo &quot;Step 9: Configuring firewall...&quot;
+if command -v firewall-cmd &amp;&gt; /dev/null; then
+    sudo firewall-cmd --permanent --add-port=3306/tcp 2&gt;/dev/null || true
+    sudo firewall-cmd --reload 2&gt;/dev/null || true
+    echo &quot;✅ Firewall rule added (firewalld)&quot;
+elif command -v ufw &amp;&gt; /dev/null; then
+    sudo ufw allow 3306/tcp 2&gt;/dev/null || true
+    echo &quot;✅ Firewall rule added (ufw)&quot;
+else
+    echo &quot;⚠️ No firewall detected - skipping&quot;
+fi
+
+# Step 10: Grant remote access
+echo &quot;&quot;
+echo &quot;Step 10: Setting up remote access...&quot;
+sudo docker exec exam-db mysql -uAdmin -pAdmin@123 -e &quot;GRANT ALL PRIVILEGES ON *.* TO &#x27;Admin&#x27;@&#x27;%&#x27; IDENTIFIED BY &#x27;Admin@123&#x27; WITH GRANT OPTION;&quot; 2&gt;/dev/null || true
+sudo docker exec exam-db mysql -uAdmin -pAdmin@123 -e &quot;FLUSH PRIVILEGES;&quot; 2&gt;/dev/null || true
+echo &quot;✅ Remote access configured&quot;
+
+# Step 11: Display connection information
+echo &quot;&quot;
+echo &quot;==========================================&quot;
+echo &quot;✅ MariaDB Setup Complete!&quot;
+echo &quot;==========================================&quot;
+echo &quot;&quot;
+echo &quot;📊 Connection Information:&quot;
+echo &quot;   Host: $(curl -s ifconfig.me 2&gt;/dev/null || hostname -I | awk &#x27;{print $1}&#x27;)&quot;
+echo &quot;   Port: 3306&quot;
+echo &quot;&quot;
+echo &quot;🔑 Database Credentials:&quot;
+echo &quot;   Database: exam&quot;
+echo &quot;   Username: Admin&quot;
+echo &quot;   Password: Admin@123&quot;
+echo &quot;   Root Password: Admin@123&quot;
+echo &quot;&quot;
+echo &quot;🧪 Test Commands:&quot;
+echo &quot;&quot;
+echo &quot;   # Test from localhost:&quot;
+echo &quot;   mysql -h 127.0.0.1 -u Admin -pAdmin@123 -e \&quot;SHOW DATABASES;\&quot;&quot;
+echo &quot;&quot;
+echo &quot;   # Connect to MySQL inside container:&quot;
+echo &quot;   sudo docker exec -it exam-db mysql -uAdmin -pAdmin@123&quot;
+echo &quot;&quot;
+echo &quot;==========================================&quot;
+</span></div></code></pre>
+<h2 id="usage">Usage</h2>
+<ol>
+<li>Save the script as <code>setup-mariadb.sh</code></li>
+<li>Make it executable:<pre class="hljs"><code><div><span class="hljs-built_in">chmod</span> +x setup-mariadb.sh
+</div></code></pre>
+</li>
+<li>Run the script:<pre class="hljs"><code><div>./setup-mariadb.sh
+</div></code></pre>
+</li>
+</ol>
+<h2 id="container-configuration">Container Configuration</h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Container Name</td>
+<td><code>exam-db</code></td>
+</tr>
+<tr>
+<td>Image</td>
+<td><code>mariadb:10.11</code></td>
+</tr>
+<tr>
+<td>Host Port</td>
+<td><code>3306</code></td>
+</tr>
+<tr>
+<td>Container Port</td>
+<td><code>3306</code></td>
+</tr>
+<tr>
+<td>Restart Policy</td>
+<td><code>always</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="database-credentials">Database Credentials</h2>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Root Password</td>
+<td><code>Admin@123</code></td>
+</tr>
+<tr>
+<td>Database Name</td>
+<td><code>exam</code></td>
+</tr>
+<tr>
+<td>Username</td>
+<td><code>Admin</code></td>
+</tr>
+<tr>
+<td>User Password</td>
+<td><code>Admin@123</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="test-commands">Test Commands</h2>
+<p>After setup, verify the installation with:</p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Test from localhost</span>
+mysql -h 127.0.0.1 -u Admin -pAdmin@123 -e <span class="hljs-string">&quot;SHOW DATABASES;&quot;</span>
+
+<span class="hljs-comment"># Connect to MySQL inside container</span>
+<span class="hljs-built_in">sudo</span> docker <span class="hljs-built_in">exec</span> -it exam-db mysql -uAdmin -pAdmin@123
+</div></code></pre>
+<h2 id="security-notes">Security Notes</h2>
+<blockquote>
+<p>⚠️ <strong>Warning:</strong> The script uses default credentials (<code>Admin@123</code>). For production environments, change these passwords immediately after setup.</p>
+</blockquote>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<ul>
+<li><strong>Connection refused:</strong> Check if firewall is blocking port 3306</li>
+<li><strong>Container not starting:</strong> Run <code>sudo docker logs exam-db</code> for detailed errors</li>
+<li><strong>Remote access issues:</strong> Verify <code>MYSQL_ROOT_HOST='%'</code> is set correctly</li>
+</ul>
+
+</body>
+</html>
