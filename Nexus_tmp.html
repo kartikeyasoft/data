@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Nexus.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="advanced-nexus-container-setup-script">Advanced Nexus Container Setup Script</h1>
+<p>This Bash script automates the deployment of a Sonatype Nexus 3 repository manager container with Docker, featuring configurable options for ports, resource limits, and persistent storage.</p>
+<h2 id="script-overview">Script Overview</h2>
+<p>The script provides an automated way to deploy Nexus 3 with:</p>
+<ul>
+<li>Persistent data storage</li>
+<li>Configurable resource limits (CPU/Memory)</li>
+<li>Customizable port mappings</li>
+<li>Automatic admin password retrieval</li>
+<li>Graceful container cleanup</li>
+</ul>
+<h2 id="features">Features</h2>
+<ul>
+<li>✅ <strong>Configurable Options</strong> - Set container name, port, version, data directory, and resource limits</li>
+<li>✅ <strong>Persistent Storage</strong> - Mounts local directory for Nexus data</li>
+<li>✅ <strong>Resource Management</strong> - CPU and memory limits with JVM optimizations</li>
+<li>✅ <strong>Auto-restart</strong> - Container restarts unless manually stopped</li>
+<li>✅ <strong>Security</strong> - Proper file permissions for Nexus user (UID 200)</li>
+<li>✅ <strong>Admin Password</strong> - Automatically displays initial admin password</li>
+</ul>
+<h2 id="full-script">Full Script</h2>
+<pre class="hljs"><code><div>
+<span class="hljs-section">#!/bin/bash</span>
+
+<span class="hljs-section"># Advanced Nexus Container Setup Script</span>
+
+set -e
+
+<span class="hljs-section"># Default values</span>
+CONTAINER<span class="hljs-emphasis">_NAME=&quot;nexus3&quot;
+IMAGE_</span>NAME=&quot;sonatype/nexus3&quot;
+NEXUS<span class="hljs-emphasis">_VERSION=&quot;latest&quot;
+HOST_</span>PORT=&quot;8081&quot;
+CONTAINER<span class="hljs-emphasis">_PORT=&quot;8081&quot;
+NEXUS_</span>DATA<span class="hljs-emphasis">_DIR=&quot;/opt/nexus-data&quot;
+MEMORY_</span>LIMIT=&quot;2g&quot;
+CPU<span class="hljs-emphasis">_LIMIT=&quot;2&quot;
+
+# Parse command line arguments
+usage() {
+    echo &quot;Usage: $0 [OPTIONS]&quot;
+    echo &quot;Options:&quot;
+    echo &quot;  -n, --name NAME        Container name (default: nexus3)&quot;
+    echo &quot;  -p, --port PORT        Host port (default: 8081)&quot;
+    echo &quot;  -v, --version VERSION  Nexus version (default: latest)&quot;
+    echo &quot;  -d, --data-dir DIR     Data directory (default: /opt/nexus-data)&quot;
+    echo &quot;  -m, --memory LIMIT     Memory limit (default: 2g)&quot;
+    echo &quot;  -c, --cpus LIMIT       CPU limit (default: 2)&quot;
+    echo &quot;  -h, --help             Show this help message&quot;
+    exit 0
+}
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -n|--name)
+            CONTAINER_</span>NAME=&quot;$2&quot;
+<span class="hljs-code">            shift 2
+            ;;
+        -p|--port)
+            HOST_PORT=&quot;$2&quot;
+            shift 2
+            ;;
+        -v|--version)
+            NEXUS_VERSION=&quot;$2&quot;
+            shift 2
+            ;;
+        -d|--data-dir)
+            NEXUS_DATA_DIR=&quot;$2&quot;
+            shift 2
+            ;;
+        -m|--memory)
+            MEMORY_LIMIT=&quot;$2&quot;
+            shift 2
+            ;;
+        -c|--cpus)
+            CPU_LIMIT=&quot;$2&quot;
+            shift 2
+            ;;
+        -h|--help)
+            usage
+            ;;
+        *)
+            echo &quot;Unknown option: $1&quot;
+            usage
+            ;;
+    esac
+done
+</span>
+
+<span class="hljs-section"># Create data directory with proper permissions</span>
+setup<span class="hljs-emphasis">_data_</span>directory() {
+<span class="hljs-code">    echo &quot;Setting up data directory: $NEXUS_DATA_DIR&quot;
+    if [ ! -d &quot;$NEXUS_DATA_DIR&quot; ]; then
+        mkdir -p &quot;$NEXUS_DATA_DIR&quot;
+    fi
+    chown -R 200:200 &quot;$NEXUS_DATA_DIR&quot;
+    chmod -R 755 &quot;$NEXUS_DATA_DIR&quot;
+}
+</span>
+<span class="hljs-section"># Remove existing container if running</span>
+cleanup() {
+<span class="hljs-code">    if docker ps -a | grep -q &quot;$CONTAINER_NAME&quot;; then
+        echo &quot;Removing existing container: $CONTAINER_NAME&quot;
+        docker stop &quot;$CONTAINER_NAME&quot; 2&gt;/dev/null || true
+        docker rm &quot;$CONTAINER_NAME&quot; 2&gt;/dev/null || true
+    fi
+}
+</span>
+<span class="hljs-section"># Pull image</span>
+pull<span class="hljs-emphasis">_image() {
+    echo &quot;Pulling Nexus image: $IMAGE_</span>NAME:$NEXUS<span class="hljs-emphasis">_VERSION&quot;
+    docker pull &quot;$IMAGE_</span>NAME:$NEXUS<span class="hljs-emphasis">_VERSION&quot;
+}
+
+# Create container
+create_</span>container() {
+<span class="hljs-code">    echo &quot;Creating Nexus container...&quot;
+</span>
+<span class="hljs-code">    docker run -d \
+        --name &quot;$CONTAINER_NAME&quot; \
+        --restart unless-stopped \
+        -p &quot;$HOST_PORT:$CONTAINER_PORT&quot; \
+        -v &quot;$NEXUS_DATA_DIR:/nexus-data&quot; \
+        --memory=&quot;$MEMORY_LIMIT&quot; \
+        --cpus=&quot;$CPU_LIMIT&quot; \
+        -e INSTALL4J_ADD_VM_PARAMS=&quot;-Xms1200m -Xmx1200m -XX:MaxDirectMemorySize=2g&quot; \
+        &quot;$IMAGE_NAME:$NEXUS_VERSION&quot;
+</span>
+<span class="hljs-code">    echo &quot;Container created successfully!&quot;
+}
+</span>
+<span class="hljs-section"># Display admin password</span>
+show<span class="hljs-emphasis">_admin_</span>password() {
+<span class="hljs-code">    echo &quot;Waiting for admin password to be generated...&quot;
+    sleep 30
+</span>
+<span class="hljs-code">    local password_file=&quot;$NEXUS_DATA_DIR/admin.password&quot;
+    if [ -f &quot;$password_file&quot; ]; then
+        echo &quot;Admin Password: $(cat $password_file)&quot;
+    else
+        echo &quot;Get admin password with: docker exec $CONTAINER_NAME cat /nexus-data/admin.password&quot;
+    fi
+}
+</span>
+<span class="hljs-section"># Main</span>
+main() {
+<span class="hljs-code">    echo &quot;=== Nexus Container Setup ===&quot;
+    setup_data_directory
+    cleanup
+    pull_image
+    create_container
+</span>
+<span class="hljs-code">    echo
+    echo &quot;Container is starting...&quot;
+    echo &quot;Access Nexus at: http://localhost:$HOST_PORT&quot;
+    echo
+    show_admin_password
+    echo
+    echo &quot;Container Status:&quot;
+    docker ps --filter &quot;name=$CONTAINER_NAME&quot;
+}
+</span>
+main
+</div></code></pre>
+<h2 id="command-line-options">Command Line Options</h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-n, --name</code></td>
+<td>Container name</td>
+<td><code>nexus3</code></td>
+</tr>
+<tr>
+<td><code>-p, --port</code></td>
+<td>Host port for Nexus UI</td>
+<td><code>8081</code></td>
+</tr>
+<tr>
+<td><code>-v, --version</code></td>
+<td>Nexus version tag</td>
+<td><code>latest</code></td>
+</tr>
+<tr>
+<td><code>-d, --data-dir</code></td>
+<td>Local data directory</td>
+<td><code>/opt/nexus-data</code></td>
+</tr>
+<tr>
+<td><code>-m, --memory</code></td>
+<td>Memory limit for container</td>
+<td><code>2g</code></td>
+</tr>
+<tr>
+<td><code>-c, --cpus</code></td>
+<td>CPU limit for container</td>
+<td><code>2</code></td>
+</tr>
+<tr>
+<td><code>-h, --help</code></td>
+<td>Show help message</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<h2 id="usage-examples">Usage Examples</h2>
+<h3 id="basic-setup-default-values">Basic setup (default values)</h3>
+<pre class="hljs"><code><div>./setup-nexus.sh
+</div></code></pre>
+<h3 id="custom-port-and-container-name">Custom port and container name</h3>
+<pre class="hljs"><code><div>./setup-nexus.sh --name my-nexus --port 9090
+</div></code></pre>
+<h3 id="with-resource-limits">With resource limits</h3>
+<pre class="hljs"><code><div>./setup-nexus.sh --memory 4g --cpus 4
+</div></code></pre>
+<h3 id="specific-version-and-custom-data-directory">Specific version and custom data directory</h3>
+<pre class="hljs"><code><div>./setup-nexus.sh --version 3.68.1 --data-dir /data/nexus
+</div></code></pre>
+<h3 id="combined-example">Combined example</h3>
+<pre class="hljs"><code><div>./setup-nexus.sh -n prod-nexus -p 8082 -m 4g -c 4 -d /mnt/nexus-data
+</div></code></pre>
+<h2 id="container-configuration">Container Configuration</h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Container Name</td>
+<td>Configurable (default: <code>nexus3</code>)</td>
+</tr>
+<tr>
+<td>Image</td>
+<td><code>sonatype/nexus3</code></td>
+</tr>
+<tr>
+<td>Host Port</td>
+<td>Configurable (default: <code>8081</code>)</td>
+</tr>
+<tr>
+<td>Container Port</td>
+<td><code>8081</code></td>
+</tr>
+<tr>
+<td>Restart Policy</td>
+<td><code>unless-stopped</code></td>
+</tr>
+<tr>
+<td>Data Volume</td>
+<td><code>$NEXUS_DATA_DIR:/nexus-data</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="jvm-parameters">JVM Parameters</h2>
+<p>The script configures the following JVM options:</p>
+<ul>
+<li><code>-Xms1200m</code> - Initial heap size</li>
+<li><code>-Xmx1200m</code> - Maximum heap size</li>
+<li><code>-XX:MaxDirectMemorySize=2g</code> - Direct memory limit</li>
+</ul>
+<h2 id="usage-steps">Usage Steps</h2>
+<ol>
+<li>
+<p><strong>Save the script</strong></p>
+<pre class="hljs"><code><div>nano setup-nexus.sh
+</div></code></pre>
+</li>
+<li>
+<p><strong>Make it executable</strong></p>
+<pre class="hljs"><code><div><span class="hljs-built_in">chmod</span> +x setup-nexus.sh
+</div></code></pre>
+</li>
+<li>
+<p><strong>Run the script</strong></p>
+<pre class="hljs"><code><div>./setup-nexus.sh
+</div></code></pre>
+</li>
+</ol>
+<h2 id="access-nexus">Access Nexus</h2>
+<p>Once the container is running, access Nexus at:</p>
+<pre class="hljs"><code><div>http://localhost:8081
+</div></code></pre>
+<h2 id="initial-login">Initial Login</h2>
+<ul>
+<li><strong>Username:</strong> <code>admin</code></li>
+<li><strong>Password:</strong> Displayed automatically after setup (or use <code>docker exec nexus3 cat /nexus-data/admin.password</code>)</li>
+</ul>
+<h2 id="security-notes">Security Notes</h2>
+<blockquote>
+<p>⚠️ <strong>Important:</strong></p>
+<ul>
+<li>Change the admin password immediately after first login</li>
+<li>The data directory (<code>/opt/nexus-data</code>) contains sensitive information</li>
+<li>Ensure proper backup of the data directory</li>
+<li>For production, consider using secrets management instead of default passwords</li>
+</ul>
+</blockquote>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Permission denied</td>
+<td>Ensure <code>chown 200:200</code> ran successfully on data directory</td>
+</tr>
+<tr>
+<td>Port already in use</td>
+<td>Use <code>-p</code> option to specify a different port</td>
+</tr>
+<tr>
+<td>Container not starting</td>
+<td>Check logs: <code>docker logs nexus3</code></td>
+</tr>
+<tr>
+<td>High memory usage</td>
+<td>Adjust <code>--memory</code> and JVM parameters</td>
+</tr>
+<tr>
+<td>Slow startup</td>
+<td>Nexus can take 2-3 minutes to fully initialize</td>
+</tr>
+</tbody>
+</table>
+<h2 id="maintenance-commands">Maintenance Commands</h2>
+<pre class="hljs"><code><div><span class="hljs-comment"># Stop container</span>
+docker stop nexus3
+
+<span class="hljs-comment"># Start container</span>
+docker start nexus3
+
+<span class="hljs-comment"># View logs</span>
+docker logs -f nexus3
+
+<span class="hljs-comment"># Access container shell</span>
+docker <span class="hljs-built_in">exec</span> -it nexus3 bash
+
+<span class="hljs-comment"># Backup data</span>
+tar -czf nexus-backup.tar.gz /opt/nexus-data
+</div></code></pre>
+
+</body>
+</html>
