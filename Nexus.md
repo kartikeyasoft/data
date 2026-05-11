@@ -26,7 +26,7 @@ The script provides an automated way to deploy Nexus 3 with:
 
 #!/bin/bash
 
-# Advanced Nexus Container Setup Script
+# Nexus Container Setup Script - Working Version with Docker Volumes
 
 set -e
 
@@ -36,9 +36,15 @@ IMAGE_NAME="sonatype/nexus3"
 NEXUS_VERSION="latest"
 HOST_PORT="8081"
 CONTAINER_PORT="8081"
-NEXUS_DATA_DIR="/opt/nexus-data"
 MEMORY_LIMIT="2g"
 CPU_LIMIT="2"
+VOLUME_NAME="nexus-data"
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
 
 # Parse command line arguments
 usage() {
@@ -47,7 +53,6 @@ usage() {
     echo "  -n, --name NAME        Container name (default: nexus3)"
     echo "  -p, --port PORT        Host port (default: 8081)"
     echo "  -v, --version VERSION  Nexus version (default: latest)"
-    echo "  -d, --data-dir DIR     Data directory (default: /opt/nexus-data)"
     echo "  -m, --memory LIMIT     Memory limit (default: 2g)"
     echo "  -c, --cpus LIMIT       CPU limit (default: 2)"
     echo "  -h, --help             Show this help message"
@@ -58,6 +63,7 @@ while [[ $# -gt 0 ]]; do
     case $1 in
         -n|--name)
             CONTAINER_NAME="$2"
+            VOLUME_NAME="${VOLUME_NAME}-${2}"
             shift 2
             ;;
         -p|--port)
@@ -66,10 +72,6 @@ while [[ $# -gt 0 ]]; do
             ;;
         -v|--version)
             NEXUS_VERSION="$2"
-            shift 2
-            ;;
-        -d|--data-dir)
-            NEXUS_DATA_DIR="$2"
             shift 2
             ;;
         -m|--memory)
@@ -84,86 +86,176 @@ while [[ $# -gt 0 ]]; do
             usage
             ;;
         *)
-            echo "Unknown option: $1"
+            echo -e "${RED}Unknown option: $1${NC}"
             usage
             ;;
     esac
 done
 
-
-# Create data directory with proper permissions
-setup_data_directory() {
-    echo "Setting up data directory: $NEXUS_DATA_DIR"
-    if [ ! -d "$NEXUS_DATA_DIR" ]; then
-        mkdir -p "$NEXUS_DATA_DIR"
+# Check if Docker is installed
+check_docker() {
+    if ! command -v docker &> /dev/null; then
+        echo -e "${RED}Docker is not installed. Please install Docker first.${NC}"
+        exit 1
     fi
-    chown -R 200:200 "$NEXUS_DATA_DIR"
-    chmod -R 755 "$NEXUS_DATA_DIR"
+}
+
+# Create Docker volume
+create_volume() {
+    echo -e "${YELLOW}Creating Docker volume: $VOLUME_NAME${NC}"
+    
+    if docker volume ls | grep -q "$VOLUME_NAME"; then
+        echo -e "${YELLOW}Volume already exists. Using existing volume.${NC}"
+    else
+        docker volume create "$VOLUME_NAME"
+        echo -e "${GREEN}Volume created successfully${NC}"
+    fi
 }
 
 # Remove existing container if running
 cleanup() {
-    if docker ps -a | grep -q "$CONTAINER_NAME"; then
-        echo "Removing existing container: $CONTAINER_NAME"
+    if docker ps -a --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
+        echo -e "${YELLOW}Removing existing container: $CONTAINER_NAME${NC}"
         docker stop "$CONTAINER_NAME" 2>/dev/null || true
         docker rm "$CONTAINER_NAME" 2>/dev/null || true
+        echo -e "${GREEN}Container removed${NC}"
     fi
 }
 
 # Pull image
 pull_image() {
-    echo "Pulling Nexus image: $IMAGE_NAME:$NEXUS_VERSION"
+    echo -e "${YELLOW}Pulling Nexus image: $IMAGE_NAME:$NEXUS_VERSION${NC}"
     docker pull "$IMAGE_NAME:$NEXUS_VERSION"
+    echo -e "${GREEN}Image pulled successfully${NC}"
 }
 
-# Create container
+# Create and run container
 create_container() {
-    echo "Creating Nexus container..."
-
-    docker run -d \
-        --name "$CONTAINER_NAME" \
+    echo -e "${YELLOW}Creating Nexus container...${NC}"
+    
+    # Build the docker run command
+    local docker_cmd="docker run -d \
+        --name \"$CONTAINER_NAME\" \
         --restart unless-stopped \
-        -p "$HOST_PORT:$CONTAINER_PORT" \
-        -v "$NEXUS_DATA_DIR:/nexus-data" \
-        --memory="$MEMORY_LIMIT" \
-        --cpus="$CPU_LIMIT" \
-        -e INSTALL4J_ADD_VM_PARAMS="-Xms1200m -Xmx1200m -XX:MaxDirectMemorySize=2g" \
-        "$IMAGE_NAME:$NEXUS_VERSION"
+        -p \"$HOST_PORT:$CONTAINER_PORT\" \
+        -v \"$VOLUME_NAME:/nexus-data\" \
+        --memory=\"$MEMORY_LIMIT\" \
+        --cpus=\"$CPU_LIMIT\" \
+        -e INSTALL4J_ADD_VM_PARAMS=\"-Xms1200m -Xmx1200m -XX:MaxDirectMemorySize=2g\""
+    
+    # Add healthcheck
+    docker_cmd="$docker_cmd --health-cmd=\"curl -f http://localhost:8081 || exit 1\" \
+        --health-interval=30s \
+        --health-timeout=10s \
+        --health-retries=5"
+    
+    docker_cmd="$docker_cmd \"$IMAGE_NAME:$NEXUS_VERSION\""
+    
+    eval $docker_cmd
+    
+    if [ $? -eq 0 ]; then
+        echo -e "${GREEN}Container created successfully!${NC}"
+    else
+        echo -e "${RED}Failed to create container${NC}"
+        exit 1
+    fi
+}
 
-    echo "Container created successfully!"
+# Wait for Nexus to start
+wait_for_nexus() {
+    echo -e "${YELLOW}Waiting for Nexus to start (this may take 2-3 minutes)...${NC}"
+    
+    local max_attempts=60
+    local attempt=1
+    
+    while [ $attempt -le $max_attempts ]; do
+        if docker logs "$CONTAINER_NAME" 2>&1 | grep -q "Started Sonatype Nexus"; then
+            echo -e "${GREEN}Nexus has started successfully!${NC}"
+            return 0
+        fi
+        
+        # Also check if the container is healthy
+        local health_status=$(docker inspect --format='{{.State.Health.Status}}' "$CONTAINER_NAME" 2>/dev/null)
+        if [ "$health_status" = "healthy" ]; then
+            echo -e "${GREEN}Nexus is healthy!${NC}"
+            return 0
+        fi
+        
+        echo -n "."
+        sleep 5
+        attempt=$((attempt + 1))
+    done
+    
+    echo -e "\n${YELLOW}Nexus is still starting. Check logs with: docker logs $CONTAINER_NAME${NC}"
 }
 
 # Display admin password
 show_admin_password() {
-    echo "Waiting for admin password to be generated..."
-    sleep 30
-
-    local password_file="$NEXUS_DATA_DIR/admin.password"
-    if [ -f "$password_file" ]; then
-        echo "Admin Password: $(cat $password_file)"
+    echo -e "\n${YELLOW}Fetching admin password...${NC}"
+    sleep 10
+    
+    # Try multiple methods to get the password
+    local password=""
+    
+    # Method 1: Direct from container
+    password=$(docker exec "$CONTAINER_NAME" cat /nexus-data/admin.password 2>/dev/null)
+    
+    # Method 2: From volume (if direct access fails)
+    if [ -z "$password" ]; then
+        password=$(docker run --rm -v "$VOLUME_NAME:/data" alpine cat /data/admin.password 2>/dev/null)
+    fi
+    
+    if [ -n "$password" ]; then
+        echo -e "${GREEN}========================================${NC}"
+        echo -e "${GREEN}Admin Username: admin${NC}"
+        echo -e "${GREEN}Admin Password: $password${NC}"
+        echo -e "${GREEN}========================================${NC}"
     else
-        echo "Get admin password with: docker exec $CONTAINER_NAME cat /nexus-data/admin.password"
+        echo -e "${YELLOW}Password file not ready yet. Get it later with:${NC}"
+        echo -e "docker exec $CONTAINER_NAME cat /nexus-data/admin.password"
     fi
 }
 
-# Main
+# Show useful commands
+show_useful_commands() {
+    echo -e "\n${GREEN}=== Useful Commands ===${NC}"
+    echo -e "View logs:       ${YELLOW}docker logs -f $CONTAINER_NAME${NC}"
+    echo -e "Stop container:  ${YELLOW}docker stop $CONTAINER_NAME${NC}"
+    echo -e "Start container: ${YELLOW}docker start $CONTAINER_NAME${NC}"
+    echo -e "Restart:         ${YELLOW}docker restart $CONTAINER_NAME${NC}"
+    echo -e "Shell access:    ${YELLOW}docker exec -it $CONTAINER_NAME /bin/bash${NC}"
+    echo -e "Get password:    ${YELLOW}docker exec $CONTAINER_NAME cat /nexus-data/admin.password${NC}"
+    echo -e "Backup volume:   ${YELLOW}docker run --rm -v $VOLUME_NAME:/data -v \$(pwd):/backup alpine tar czf /backup/nexus-backup.tar.gz /data${NC}"
+    echo -e "Remove container:${YELLOW} docker rm -f $CONTAINER_NAME${NC}"
+    echo -e "Remove volume:   ${YELLOW}docker volume rm $VOLUME_NAME${NC}"
+}
+
+# Main function
 main() {
-    echo "=== Nexus Container Setup ==="
-    setup_data_directory
+    echo -e "${GREEN}=== Nexus Container Setup ===${NC}"
+    echo -e "Container: $CONTAINER_NAME"
+    echo -e "Port: $HOST_PORT:$CONTAINER_PORT"
+    echo -e "Memory: $MEMORY_LIMIT"
+    echo -e "CPU: $CPU_LIMIT"
+    echo -e "Volume: $VOLUME_NAME"
+    echo ""
+    
+    check_docker
+    create_volume
     cleanup
     pull_image
     create_container
-
-    echo
-    echo "Container is starting..."
-    echo "Access Nexus at: http://localhost:$HOST_PORT"
-    echo
+    wait_for_nexus
     show_admin_password
-    echo
-    echo "Container Status:"
-    docker ps --filter "name=$CONTAINER_NAME"
+    show_useful_commands
+    
+    echo -e "\n${GREEN}========================================${NC}"
+    echo -e "${GREEN}Nexus is ready! Access it at:${NC}"
+    echo -e "${YELLOW}http://localhost:$HOST_PORT${NC}"
+    echo -e "${GREEN}========================================${NC}"
 }
 
+# Run main function
 main
 ```
 
