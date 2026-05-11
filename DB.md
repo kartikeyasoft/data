@@ -1,4 +1,3 @@
-```markdown
 # MariaDB Container Setup Script
 
 This Bash script automates the deployment of a MariaDB container with Docker, including installation, configuration, firewall setup, and remote access.
@@ -24,6 +23,8 @@ The script performs the following steps:
 10. Displays connection information
 
 ## Full Script
+
+```markdown
 
 ```bash
 #!/bin/bash
