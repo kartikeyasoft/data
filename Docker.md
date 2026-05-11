@@ -26,4 +26,3 @@ Once running, access SonarQube at: `http://localhost:9000`
 
 - **Username:** `admin`
 - **Password:** `admin`
-```
