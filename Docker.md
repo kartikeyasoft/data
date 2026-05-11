@@ -1,11 +1,12 @@
-```markdown
+
 # SonarQube Docker Setup
 
 ## Quick Start
 
 Run the following command to start SonarQube LTS Community Edition:
 
-```bash
+```markdown
+
 docker run -d -p 9000:9000 sonarqube:lts-community
 ```
 
