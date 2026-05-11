@@ -26,7 +26,6 @@ The script performs the following steps:
 
 ```markdown
 
-```bash
 #!/bin/bash
 
 # ============================================
