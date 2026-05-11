@@ -196,34 +196,6 @@ main
 ./setup-nexus.sh --memory 4g --cpus 4
 ```
 
-### Specific version and custom data directory
-```bash
-./setup-nexus.sh --version 3.68.1 --data-dir /data/nexus
-```
-
-### Combined example
-```bash
-./setup-nexus.sh -n prod-nexus -p 8082 -m 4g -c 4 -d /mnt/nexus-data
-```
-
-## Container Configuration
-
-| Parameter | Value |
-|-----------|-------|
-| Container Name | Configurable (default: `nexus3`) |
-| Image | `sonatype/nexus3` |
-| Host Port | Configurable (default: `8081`) |
-| Container Port | `8081` |
-| Restart Policy | `unless-stopped` |
-| Data Volume | `$NEXUS_DATA_DIR:/nexus-data` |
-
-## JVM Parameters
-
-The script configures the following JVM options:
-- `-Xms1200m` - Initial heap size
-- `-Xmx1200m` - Maximum heap size
-- `-XX:MaxDirectMemorySize=2g` - Direct memory limit
-
 ## Usage Steps
 
 1. **Save the script**
