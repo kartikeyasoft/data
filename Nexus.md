@@ -20,16 +20,13 @@ The script provides an automated way to deploy Nexus 3 with:
 - ✅ **Security** - Proper file permissions for Nexus user (UID 200)
 - ✅ **Admin Password** - Automatically displays initial admin password
 
-## Docker Install
-
-```markdown
-sudo snap install docker
-```
 ## Full Script
 
 ```markdown
 
 #!/bin/bash
+
+sudo snap install docker
 
 # Nexus Container Setup Script - Working Version with Docker Volumes
 
