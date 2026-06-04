@@ -1,5 +1,3 @@
-Here's your MySQL container setup script matching your application.properties:
-
 ## **setup-mysql.sh**
 
 ```bash
